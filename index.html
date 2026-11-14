@@ -289,7 +289,36 @@ footer {
   <section class="panel">
     <div class="panel-title">QUICK ACTION</div>
     <div class="actions">
-      <button class="action" onclick="location.href='shortcuts://run-shortcut?name=JARVIS%20-%20%E3%82%A2%E3%83%A9%E3%83%BC%E3%83%A0%E8%A8%AD%E5%AE%9A'">ALARM</button>
+      <!-- JARVIS アラーム設定用ボタン＆モーダル -->
+<button class="action" onclick="openAlarmModal()">ALARM</button>
+
+<!-- 時刻選択モーダル（初期状態は非表示） -->
+<div id="alarmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: #0b1329; border: 2px solid #00f0ff; padding: 25px; border-radius: 15px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 0 20px rgba(0,240,255,0.4);">
+        <h3 style="color: #00f0ff; margin-bottom: 15px; font-family: monospace;">SET ALARM TIME</h3>
+        <input type="time" id="alarmTimeInput" value="07:00" style="font-size: 24px; padding: 10px; background: #030712; color: #00f0ff; border: 1px solid #00f0ff; border-radius: 8px; width: 100%; text-align: center; margin-bottom: 20px;">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button onclick="setAlarm()" style="flex: 1; padding: 12px; background: #00f0ff; color: #030712; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">SET ALARM</button>
+            <button onclick="closeAlarmModal()" style="flex: 1; padding: 12px; background: transparent; color: #8a9bb8; border: 1px solid #8a9bb8; border-radius: 8px; cursor: pointer;">CANCEL</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openAlarmModal() {
+    document.getElementById('alarmModal').style.display = 'flex';
+}
+function closeAlarmModal() {
+    document.getElementById('alarmModal').style.display = 'none';
+}
+function setAlarm() {
+    const timeVal = document.getElementById('alarmTimeInput').value;
+    if (!timeVal) return;
+    // ショートカットへ時刻を渡して起動
+    location.href = `shortcuts://run-shortcut?name=JARVIS%20-%20%E3%82%A2%E3%83%A9%E3%83%BC%E3%83%A0%E8%A8%AD%E5%AE%9A&input=text&text=${encodeURIComponent(timeVal)}`;
+}
+</script>
+
       <button class="action" onclick="demo('カレンダー機能は未接続です。')">CALENDAR</button>
       <button class="action" onclick="demo('リマインダー機能は未接続です。')">REMINDER</button>
       <button class="action" onclick="demo('Web検索機能は未接続です。')">WEB SEARCH</button>
