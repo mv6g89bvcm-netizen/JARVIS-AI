@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J.A.R.V.I.S.</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#03070d;color:#bceeff;
+ font-family:Arial,sans-serif;text-align:center;
+ min-height:100vh;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;
+}
+h1{letter-spacing:7px;font-size:27px;color:#65dfff}
+.status{font-size:12px;letter-spacing:3px;color:#4baacb}
+.core{
+ width:240px;height:240px;border-radius:50%;
+ border:2px solid #168dc8;
+ box-shadow:0 0 25px #087dbb,inset 0 0 30px #087dbb;
+ display:flex;align-items:center;justify-content:center;
+ margin:35px auto;position:relative;
+ animation:pulse 3s infinite;
+}
+.core:before,.core:after{
+ content:"";position:absolute;border-radius:50%;
+ border:1px solid #36bfff;
+}
+.core:before{inset:15px}
+.core:after{inset:35px;border-style:dashed}
+.inner{font-size:17px;letter-spacing:4px}
+@keyframes pulse{
+ 50%{box-shadow:0 0 45px #159eea,inset 0 0 45px #087dbb}
+}
+#answer{
+ width:85%;max-width:420px;min-height:65px;
+ color:#bceeff;font-size:15px;line-height:1.7;
+ margin:10px auto;
+}
+input{
+ width:80%;padding:14px;border-radius:25px;
+ background:#101c29;border:1px solid #168dc8;
+ color:white;font-size:16px;outline:none;
+}
+button{
+ padding:13px 22px;margin:8px;border-radius:25px;
+ border:1px solid #168dc8;background:#09243a;
+ color:#8de4ff;font-size:15px;
+}
+footer{font-size:10px;color:#426a80;margin-top:25px}
+</style>
+</head>
+<body>
+<h1>J.A.R.V.I.S.</h1>
+<div class="status" id="status">SYSTEM ONLINE</div>
+<div class="core">
+ <div class="inner">J.A.R.V.I.S.</div>
+</div>
+<div id="answer">お待ちしております。</div>
+<input id="question" placeholder="メッセージを入力">
+<div>
+ <button onclick="send()">送信</button>
+ <button onclick="listen()">🎙 音声入力</button>
+</div>
+<footer>PERSONAL AI INTERFACE / VERSION 1.0</footer>
+<script>
+function speak(text){
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang="ja-JP";
+ u.rate=0.9;
+ speechSynthesis.cancel();
+ speechSynthesis.speak(u);
+}
+function send(){
+ const q=document.getElementById("question").value.trim();
+ if(!q)return;
+ document.getElementById("answer").textContent=
+ "入力を受け付けました："+q+
+ "。現在、AI接続は未設定です。";
+ document.getElementById("question").value="";
+}
+function listen(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){
+  document.getElementById("answer").textContent=
+  "このブラウザでは音声認識に対応していません。";
+  return;
+ }
+ const r=new SR();
+ r.lang="ja-JP";
+ r.onstart=()=>document.getElementById("status").textContent="LISTENING...";
+ r.onresult=e=>{
+  document.getElementById("question").value=
+  e.results[0][0].transcript;
+  document.getElementById("status").textContent="SYSTEM ONLINE";
+  send();
+ };
+ r.onerror=()=>document.getElementById("status").textContent="SYSTEM ONLINE";
+ r.onend=()=>document.getElementById("status").textContent="SYSTEM ONLINE";
+ r.start();
+}
+</script>
+</body>
+</html>
